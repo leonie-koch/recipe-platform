@@ -28,7 +28,7 @@ class RecipeController(private val service: RecipeService) {
 
     // POST /api/recipes
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // HTTP 201 bei Erfolg
+    @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody recipe: Recipe): Recipe = service.createRecipe(recipe)
 
     // PUT /api/recipes/{id}
@@ -44,7 +44,7 @@ class RecipeController(private val service: RecipeService) {
 
     // DELETE /api/recipes/{id}
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT) // HTTP 204 bei Erfolg
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(@PathVariable id: Long) {
         service.deleteRecipe(id)
     }
