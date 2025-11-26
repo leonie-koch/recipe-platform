@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.*
 
-
 @Service
 class JwtService(
     @Value("\${jwt.secret.key}") private val secretKey: String,
@@ -20,33 +19,35 @@ class JwtService(
         val expireDate = Date(currentDate.time + jwtExpiration)
 
         return Jwts.builder()
-            .subject(userDetails.username)
-            .issuedAt(currentDate)
-            .expiration(expireDate)
+            .setSubject(userDetails.username)
+            .setIssuedAt(currentDate)
+            .setExpiration(expireDate)
             .signWith(key)
             .compact()
     }
 
     fun extractUsername(token: String): String {
-        return Jwts.parser()
-            .verifyWith(key)
+        val claims = Jwts.parserBuilder()
+            .setSigningKey(key)
             .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .subject;
+            .parseClaimsJws(token)
+            .body
+
+        return claims.subject
     }
 
     fun isTokenValid(token: String, userDetails: UserDetails): Boolean {
         val username = extractUsername(token)
-        return (username == userDetails.username && !isTokenExpired(token))
+        return username == userDetails.username && !isTokenExpired(token)
     }
 
     private fun isTokenExpired(token: String): Boolean {
-        return Jwts.parser()
-            .verifyWith(key)
+        val claims = Jwts.parserBuilder()
+            .setSigningKey(key)
             .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .expiration.before(Date());
+            .parseClaimsJws(token)
+            .body
+
+        return claims.expiration.before(Date())
     }
 }

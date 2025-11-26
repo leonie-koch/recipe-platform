@@ -19,7 +19,7 @@ class AuthService(
     private val authenticationManager: AuthenticationManager
 ) {
     fun register(request: RegisterRequest): AuthResponse {
-        if (userRepository.findByUsername(request.username) != null) {
+        if (userRepository.findByUsernameField(request.username) != null) {
             throw IllegalArgumentException("Username already taken")
         }
 
@@ -40,7 +40,7 @@ class AuthService(
             UsernamePasswordAuthenticationToken(request.username, request.password)
         )
         // 2. Benutzer abrufen und JWT generieren
-        val user = userRepository.findByUsername(request.username)
+        val user = userRepository.findByUsernameField(request.username)
             ?: throw RuntimeException("User not found after successful auth")
 
         val jwtToken = jwtService.generateToken(user)

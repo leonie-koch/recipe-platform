@@ -18,6 +18,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import java.util.Arrays
+import org.springframework.security.config.Customizer
+import org.springframework.web.cors.CorsConfiguration
 
 @Configuration
 @EnableWebSecurity
@@ -35,14 +40,33 @@ class SecurityConfig(
     }
 
     @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration()
+
+        // Wenn Sie diesen Wildcard verwenden...
+        configuration.allowedOrigins = Arrays.asList("*")
+
+        // ... muss allowCredentials auf FALSE gesetzt werden!
+        configuration.allowCredentials = false
+
+        configuration.allowedMethods = Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        configuration.allowedHeaders = Arrays.asList("*")
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+
+        return source
+    }
+
+    @Bean
     fun securityFilterChain(http: HttpSecurity, jwtAuthFilter: JwtAuthenticationFilter,
                             authenticationProvider: AuthenticationProvider): SecurityFilterChain {
         http
+            .cors(Customizer.withDefaults())
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/recipes/**").permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement { session ->
@@ -55,7 +79,7 @@ class SecurityConfig(
 
     @Bean
     fun userDetailsService(): UserDetailsService = UserDetailsService { username ->
-        userRepository.findByUsername(username)
+        userRepository.findByUsernameField(username)
             ?: throw UsernameNotFoundException("User not found: $username")
     }
 
