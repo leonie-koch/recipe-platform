@@ -13,8 +13,6 @@ Eine moderne Anwendung zum Erstellen und Teilen von Rezepten. Das Backend basier
 
 ## 🚀 Lokale Entwicklung starten (Quick Start)
 
-Um das gesamte Projekt lokal auszuführen, wird eine laufende **PostgreSQL-Datenbank** und eine .env Datei benätigt.
-
 ### 1. Voraussetzungen
 
 Folgende Software muss installiert sein:
@@ -24,58 +22,57 @@ Folgende Software muss installiert sein:
 * **Docker** (oder eine lokale PostgreSQL-Installation)
 * **Git**
 
-### 2. Datenbank (PostgreSQL) starten
-
-Docker Befehl um PostgresSQL zu starten:
-
-```bash
-docker run --name recipe-postgres -e POSTGRES_USER=recipeuser -e POSTGRES_PASSWORD=mysecretpassword -e POSTGRES_DB=recipedb -p 5432:5432 -d postgres:latest
-```
-
-### 3. Konfigurationsdatei (.env) erstellen
+### 2. Konfigurationsdatei (.env) erstellen
 
 Um die Zugangsdaten der Datenbank und sensible Geheimnisse (wie den JWT-Schlüssel) aus der Versionskontrolle fernzuhalten, wird im **Root-Verzeichnis** des Projekts eine `.env`-Datei angelegt.
-
-Diese Datei definiert die Umgebungsvariablen, die von `application.properties` ausgelesen werden.
 
 ```env
 # Root-Verzeichnis/.env
 # -----------------------------------------------------------------------
 # DATENBANK-KONFIGURATION (PostgreSQL)
 # -----------------------------------------------------------------------
-# URL zur Datenbank (muss mit dem Docker-Setup übereinstimmen: localhost:5432/recipedb)
-DB_URL=jdbc:postgresql://localhost:5432/recipedb 
-DB_USERNAME=recipeuser      
-DB_PASSWORD=mysecretpassword  
+# Hinweis: Die Host-Adresse ist vom Ausführungskontext abhängig.
+
+# URL für LOKALES Debugging (Wird für Option A verwendet)
+DB_URL=jdbc:postgresql://localhost:5432/postgres
+
+# URL für DOCKER COMPOSE (Wird für Option B verwendet)
+DB_URL=jdbc:postgresql://db:5432/postgres 
+DB_NAME=postgres # Wird von Docker Compose für POSTGRES_DB verwendet
+
+# Zugangsdaten (Müssen konsistent sein, hier: Standard-Postgres-User)
+DB_USERNAME=postgres      
+DB_PASSWORD=mysecretpassword 
 
 # -----------------------------------------------------------------------
 # SICHERHEITS-KONFIGURATION (JWT)
 # -----------------------------------------------------------------------
 # JWT Secret Key: Muss ein zufälliger, starker String sein (mindestens 32 Zeichen / 256 Bit)
-jwt.secret.key=[]
+JWT_SECRET_KEY=[BITTE HIER EINEN LANGEN, ZUFÄLLIGEN GEHEIMSCHLÜSSEL EINFÜGEN]
 # JWT Ablaufzeit: Zeit in Millisekunden (z.B. 86400000 ms = 24 Stunden)
-jwt.expiration=86400000
+JWT_EXPIRATION=86400000
 ```
 
-### 4. Starten der Komponenten
-#### A. Backend starten
-In das Verzeichnis backend/ navigieren und starten der Spring Boot-Anwendung mit Gradle:
+### 🚀 3. Startoptionen
 
+### Option A: 💻 Lokales Development (Debugging)
+
+Dieser Modus dient dem schnellen Code-Test und Debugging. Erfordert, dass die Datenbank **manuell** über `docker run` oder eine lokale Installation gestartet wird.
+
+* **Vorbereitung:** Starten der PostgreSQL-Datenbank.
 ```bash
-cd backend/
-./gradlew bootRun
-(Die API läuft jetzt unter http://localhost:8080.)
+docker run --name postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=mysecretpassword -e POSTGRES_DB=postgres -p 5432:5432 -d postgres:latest
 ```
+* **Backend starten:** Navigieren zu `backend/` und Anwendung starten in IDE oder Shell. **Wichtig:** Die Umgebungsvariable `DB_URL` muss auf `jdbc:postgresql://localhost:5432/recipedb` gesetzt werden.
+* **Frontend starten:** Navigieren zu `frontend/` und `npm run dev` ausführen.
 
-#### B. Frontend starten
-In das Verzeichnis frontend/ navigieren & Installation der Abhängigkeiten, falls noch nicht geschehen:
+### Option B: 🐳 Container-basiertes Deployment (Docker Compose)
 
-```bash
-cd frontend/
-npm install
-npm run dev
-```
-(Die Vue-Anwendung läuft jetzt unter http://localhost:5173 oder ähnlich.)
+* **Startbefehl:** Starten der Applikation per docker compose
+    ```bash
+    docker compose up --build -d
+    ```
+    *(Die Anwendung ist über `http://localhost:5173` erreichbar.)*
 
 ---
 
