@@ -17,7 +17,7 @@ Um das gesamte Projekt lokal auszuführen, wird eine laufende **PostgreSQL-Daten
 
 ### 1. Voraussetzungen
 
-Stellen Sie sicher, dass folgende Software installiert ist:
+Folgende Software muss installiert sein:
 
 * **Java Development Kit (JDK) 17+**
 * **Node.js (LTS)** und **npm** oder **yarn**
@@ -26,7 +26,7 @@ Stellen Sie sicher, dass folgende Software installiert ist:
 
 ### 2. Datenbank (PostgreSQL) starten
 
-Der einfachste Weg, PostgreSQL zu starten, ist die Verwendung von Docker. Führen Sie diesen Befehl in Ihrem Terminal aus:
+Docker Befehl um PostgresSQL zu starten:
 
 ```bash
 docker run --name recipe-postgres -e POSTGRES_USER=recipeuser -e POSTGRES_PASSWORD=mysecretpassword -e POSTGRES_DB=recipedb -p 5432:5432 -d postgres:latest
@@ -58,7 +58,7 @@ jwt.expiration=86400000
 ```
 
 ### 4. Starten der Komponenten
-A. Backend starten
+#### A. Backend starten
 In das Verzeichnis backend/ navigieren und starten der Spring Boot-Anwendung mit Gradle:
 
 ```bash
@@ -67,8 +67,8 @@ cd backend/
 (Die API läuft jetzt unter http://localhost:8080.)
 ```
 
-B. Frontend starten
-Iin das Verzeichnis frontend/ navigieren & Installation der Abhängigkeiten, falls noch nicht geschehen:
+#### B. Frontend starten
+In das Verzeichnis frontend/ navigieren & Installation der Abhängigkeiten, falls noch nicht geschehen:
 
 ```bash
 cd frontend/
