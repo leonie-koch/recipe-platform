@@ -78,9 +78,9 @@ class SecurityConfig(
     }
 
     @Bean
-    fun userDetailsService(): UserDetailsService = UserDetailsService { username ->
-        userRepository.findByUsernameField(username)
-            ?: throw UsernameNotFoundException("User not found: $username")
+    fun userDetailsService(): UserDetailsService = UserDetailsService { userName ->
+        userRepository.findByUserName(userName)
+            ?: throw UsernameNotFoundException("User not found: $userName")
     }
 
     @Bean

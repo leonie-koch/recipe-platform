@@ -6,14 +6,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
-@Table(name = "users")
+@Table(name = "app_user")
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @Column(unique = true, nullable = false)
-    val usernameField: String,
+    val userName: String,
 
     @Column(nullable = false)
     val passwordHash: String,
@@ -27,7 +27,7 @@ data class User(
     override fun getAuthorities(): Collection<GrantedAuthority> = roles.map { SimpleGrantedAuthority(it) }
 
     override fun getPassword(): String = passwordHash
-    override fun getUsername(): String = usernameField
+    override fun getUsername(): String = userName
 
     override fun isAccountNonExpired(): Boolean = true
     override fun isAccountNonLocked(): Boolean = true
