@@ -8,8 +8,10 @@ import Password from 'primevue/password'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
 import type { LoginRequest } from '@/types/Auth'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const errorMessage = ref('')
 const credentials = ref<LoginRequest>({ username: '', password: '' })
 
@@ -23,7 +25,7 @@ const handleLogin = async () => {
 
   try {
     const response = await loginUser(credentials.value)
-    localStorage.setItem('jwt_token', response.data.token)
+    authStore.setToken(response.data.token)
     router.push('/')
   } catch (error) {
     errorMessage.value = 'Anmeldung fehlgeschlagen. Überprüfen Sie Benutzername und Passwort.'
@@ -32,9 +34,11 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="h-full w-full flex items-center justify-center p-4">
-    <Card style="width: 25em" class="shadow-lg max-w-sm w-full">
-      <template #title>Login</template>
+  <div class="flex items-center justify-center min-h-screen bg-gray-50">
+    <Card class="w-full max-w-md shadow-lg p-8">
+      <template #title>
+        <h2 class="text-2xl font-bold text-center">Login</h2>
+      </template>
 
       <template #content>
         <Message v-if="errorMessage" severity="error" :closable="false" class="mb-4">
@@ -43,33 +47,37 @@ const handleLogin = async () => {
 
         <form @submit.prevent="handleLogin" class="space-y-4">
           <div>
-            <label for="username" class="block mb-1 text-sm font-medium text-gray-700"
-              >Benutzername</label
-            >
-            <InputText id="username" v-model="credentials.username" class="w-full" />
+            <label for="username" class="block mb-1 text-sm font-medium text-gray-700">
+              Benutzername
+            </label>
+            <InputText
+              id="username"
+              v-model="credentials.username"
+              class="w-full border border-gray-300 rounded-md p-2"
+            />
           </div>
 
           <div>
-            <label for="password" class="block mb-1 text-sm font-medium text-gray-700"
-              >Passwort</label
-            >
+            <label for="password" class="block mb-1 text-sm font-medium text-gray-700">
+              Passwort
+            </label>
             <Password
               id="password"
               v-model="credentials.password"
               :feedback="false"
               :toggleMask="true"
-              class="w-full"
+              class="w-full border border-gray-300 rounded-md p-2"
             />
           </div>
 
-          <Button type="submit" label="Anmelden" icon="pi pi-sign-in" class="w-full mt-4" />
+          <Button type="submit" label="Anmelden" icon="pi pi-sign-in" class="w-full mt-2" />
         </form>
 
-        <p class="mt-4 text-center text-sm">
+        <p class="mt-4 text-center text-sm text-gray-600">
           Noch kein Konto?
-          <router-link to="/register" class="text-blue-600 hover:text-blue-800 font-medium"
-            >Jetzt registrieren</router-link
-          >
+          <router-link to="/register" class="text-blue-600 hover:text-blue-800 font-medium">
+            Jetzt registrieren
+          </router-link>
         </p>
       </template>
     </Card>

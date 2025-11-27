@@ -3,44 +3,38 @@ import { computed, ref } from 'vue'
 import { useRouter, RouterView } from 'vue-router'
 import Menubar from 'primevue/menubar'
 import Button from 'primevue/button'
+import { useAuthStore } from '@/stores/auth' // Pinia Store importieren
 
 const router = useRouter()
-
-const isLoggedIn = computed(() => !!localStorage.getItem('jwt_token'))
+const authStore = useAuthStore()
 
 const handleLogout = () => {
-  localStorage.removeItem('jwt_token')
+  authStore.setToken(null)
   router.push('/login')
 }
 
-const menuItems = ref([
-  {
-    label: 'Home Feed',
-    icon: 'pi pi-home',
-    command: () => router.push('/'),
-  },
-])
+const menuItems = computed(() => {
+  const items = [{ label: 'Home Feed', icon: 'pi pi-home', command: () => router.push('/') }]
+
+  return items
+})
 </script>
 
 <template>
   <div id="layout" class="flex flex-col min-h-screen">
-    <Menubar :model="menuItems" class="w-full">
+    <Menubar :model="menuItems">
       <template #start>
-        <div
-          class="font-bold text-lg cursor-pointer text-blue-600 hover:text-blue-700"
-          @click="router.push('/')"
-        >
+        <div class="font-bold text-lg cursor-pointer mr-4" @click="router.push('/')">
           Recipe Platform
         </div>
       </template>
-
       <template #end>
         <div class="flex items-center space-x-2">
-          <template v-if="!isLoggedIn">
+          <template v-if="!authStore.isLoggedIn">
             <Button
               label="Login"
               icon="pi pi-sign-in"
-              severity="secondary"
+              severity="primary"
               text
               @click="router.push('/login')"
             />
@@ -53,13 +47,6 @@ const menuItems = ref([
           </template>
 
           <template v-else>
-            <Button
-              label="Neues Rezept"
-              icon="pi pi-plus"
-              severity="info"
-              text
-              @click="router.push('/recipes/new')"
-            />
             <Button label="Logout" icon="pi pi-sign-out" severity="danger" @click="handleLogout" />
           </template>
         </div>

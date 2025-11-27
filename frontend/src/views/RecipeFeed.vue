@@ -81,8 +81,13 @@ const loadRecipes = async () => {
   try {
     const response = await getRecipes()
     recipes.value = response.data
-  } catch {
-    error.value = 'Fehler beim Laden der Rezepte. Läuft das Backend?'
+  } catch (err: any) {
+    if (err.response?.status === 401 || err.response?.status === 403) {
+      error.value = 'Du bist nicht eingeloggt. Bitte melde dich an.'
+    } else {
+      error.value = 'Fehler beim Laden der Rezepte. Läuft das Backend?'
+    }
+    console.error('API Error:', err)
   }
 }
 
@@ -111,7 +116,9 @@ onMounted(async () => {
     </div>
 
     <div v-else-if="error">
-      <Message severity="error" :closable="false">{{ error }}</Message>
+      <Message :closable="false">
+        {{ error }}
+      </Message>
     </div>
 
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

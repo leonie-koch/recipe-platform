@@ -9,8 +9,10 @@ import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const errorMessage = ref('')
 const successMessage = ref('')
 const credentials = ref<RegisterRequest>({
@@ -28,23 +30,15 @@ const handleRegister = async () => {
   }
 
   try {
-    // 1. API-Aufruf (Registrierung)
     const response = await registerUser(credentials.value)
-
-    // 2. Token speichern (Login direkt nach Registrierung)
-    localStorage.setItem('jwt_token', response.data.token)
-
-    // 3. Optional: Erfolgsmeldung anzeigen und navigieren
+    authStore.setToken(response.data.token)
     successMessage.value = 'Registrierung erfolgreich! Sie werden weitergeleitet...'
 
-    // 4. Navigation nach kurzer Verzögerung
     setTimeout(() => {
       router.push('/')
     }, 1000)
-  } catch (error) {
+  } catch (error: any) {
     console.error('Registrierung fehlgeschlagen:', error)
-
-    // Spezifische Behandlung für den 409 Conflict (Username Taken) aus dem Backend
     if (error.response && error.response.status === 409) {
       errorMessage.value = 'Dieser Benutzername ist bereits vergeben.'
     } else {
@@ -55,38 +49,58 @@ const handleRegister = async () => {
 </script>
 
 <template>
-  <div class="p-d-flex p-jc-center p-mt-6">
-    <Card style="width: 25em">
-      <template #title> Konto erstellen </template>
+  <div class="flex items-center justify-center min-h-screen bg-gray-50">
+    <Card class="w-full max-w-md shadow-lg p-8">
+      <template #title>
+        <h2 class="text-2xl font-bold text-center">Konto erstellen</h2>
+      </template>
 
       <template #content>
-        <Message v-if="successMessage" severity="success" :closable="false">{{
-          successMessage
-        }}</Message>
-        <Message v-if="errorMessage" severity="error" :closable="false">{{ errorMessage }}</Message>
+        <div class="space-y-3">
+          <Message v-if="successMessage" severity="success" :closable="false" class="mb-2">
+            {{ successMessage }}
+          </Message>
+          <Message v-if="errorMessage" severity="error" :closable="false" class="mb-2">
+            {{ errorMessage }}
+          </Message>
+        </div>
 
-        <form @submit.prevent="handleRegister" class="p-fluid">
-          <div class="p-field">
-            <label for="username">Benutzername</label>
-            <InputText id="username" type="text" v-model="credentials.username" required />
+        <form @submit.prevent="handleRegister" class="space-y-4">
+          <div>
+            <label for="username" class="block mb-1 text-sm font-medium text-gray-700">
+              Benutzername
+            </label>
+            <InputText
+              id="username"
+              type="text"
+              v-model="credentials.username"
+              class="w-full border border-gray-300 rounded-md p-2"
+              required
+            />
           </div>
 
-          <div class="p-field p-mt-3">
-            <label for="password">Passwort</label>
+          <div>
+            <label for="password" class="block mb-1 text-sm font-medium text-gray-700">
+              Passwort
+            </label>
             <Password
               id="password"
               v-model="credentials.password"
               :toggleMask="true"
               :feedback="false"
+              class="w-full border border-gray-300 rounded-md p-2"
               required
             />
           </div>
 
-          <Button type="submit" label="Registrieren" icon="pi pi-user-plus" class="p-mt-4" />
+          <Button type="submit" label="Registrieren" icon="pi pi-user-plus" class="w-full mt-2" />
         </form>
 
-        <p class="p-text-center p-mt-3">
-          Bereits registriert? <router-link to="/login">Hier anmelden</router-link>
+        <p class="mt-4 text-center text-sm text-gray-600">
+          Bereits registriert?
+          <router-link to="/login" class="text-blue-600 hover:text-blue-800 font-medium">
+            Hier anmelden
+          </router-link>
         </p>
       </template>
     </Card>
