@@ -57,18 +57,20 @@ JWT_EXPIRATION=86400000
 
 ### Option A: 💻 Lokales Development (Debugging)
 
-Dieser Modus dient dem schnellen Code-Test und Debugging. Erfordert, dass die Datenbank **manuell** über `docker run` oder eine lokale Installation gestartet wird.
+Dieser Modus dient dem schnellen Code-Test und Debugging.
 
 * **Vorbereitung:** Starten der PostgreSQL-Datenbank.
-```bash
-docker run --name postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=mysecretpassword -e POSTGRES_DB=postgres -p 5432:5432 -d postgres:latest
-```
-* **Backend starten:** Navigieren zu `backend/` und Anwendung starten in IDE oder Shell. **Wichtig:** Die Umgebungsvariable `DB_URL` muss auf `jdbc:postgresql://localhost:5432/recipedb` gesetzt werden.
+
+  ```bash
+  docker run --name postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=mysecretpassword -e POSTGRES_DB=postgres -p 5432:5432 -d postgres:latest
+  ```
+* **Backend starten:** Navigieren zu `backend/` und Anwendung starten in IDE oder Shell.
 * **Frontend starten:** Navigieren zu `frontend/` und `npm run dev` ausführen.
 
 ### Option B: 🐳 Container-basiertes Deployment (Docker Compose)
 
 * **Startbefehl:** Starten der Applikation per docker compose
+
     ```bash
     docker compose up --build -d
     ```
