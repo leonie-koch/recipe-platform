@@ -2,19 +2,16 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginUser } from '@/client/recipe-client'
-import type { LoginRequest } from '@/types/Auth'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
+import type { LoginRequest } from '@/types/Auth'
 
 const router = useRouter()
 const errorMessage = ref('')
-const credentials = ref<LoginRequest>({
-  username: '',
-  password: '',
-})
+const credentials = ref<LoginRequest>({ username: '', password: '' })
 
 const handleLogin = async () => {
   errorMessage.value = ''
@@ -25,64 +22,77 @@ const handleLogin = async () => {
   }
 
   try {
-    // 1. API-Aufruf (Login)
     const response = await loginUser(credentials.value)
-
-    // 2. Token speichern
     localStorage.setItem('jwt_token', response.data.token)
-
-    // 3. Navigation zur Startseite
     router.push('/')
   } catch (error) {
-    // 4. Fehlerbehandlung (z.B. 401 Unauthorized)
-    console.error('Login fehlgeschlagen:', error)
     errorMessage.value = 'Anmeldung fehlgeschlagen. Überprüfen Sie Benutzername und Passwort.'
   }
 }
 </script>
 
 <template>
-  <div class="p-d-flex p-jc-center p-mt-6">
-    <Card style="width: 25em">
-      <template #title> Login </template>
+  <div class="h-full w-full flex items-center justify-center p-4">
+    <Card style="width: 25em" class="shadow-lg max-w-sm w-full">
+      <template #title>Login</template>
 
       <template #content>
-        <Message v-if="errorMessage" severity="error" :closable="false">
+        <Message v-if="errorMessage" severity="error" :closable="false" class="mb-4">
           {{ errorMessage }}
         </Message>
 
-        <form @submit.prevent="handleLogin" class="p-fluid">
-          <div class="p-field">
-            <label for="username">Benutzername</label>
-            <InputText
-              id="username"
-              type="text"
-              v-model="credentials.username"
-              aria-describedby="username-help"
-              :class="{ 'p-invalid': errorMessage }"
-              required
-            />
+        <form @submit.prevent="handleLogin" class="space-y-4">
+          <div>
+            <label for="username" class="block mb-1 text-sm font-medium text-gray-700"
+              >Benutzername</label
+            >
+            <InputText id="username" v-model="credentials.username" class="w-full" />
           </div>
 
-          <div class="p-field p-mt-3">
-            <label for="password">Passwort</label>
+          <div>
+            <label for="password" class="block mb-1 text-sm font-medium text-gray-700"
+              >Passwort</label
+            >
             <Password
               id="password"
               v-model="credentials.password"
-              :toggleMask="true"
               :feedback="false"
-              :class="{ 'p-invalid': errorMessage }"
-              required
+              :toggleMask="true"
+              class="w-full"
             />
           </div>
 
-          <Button type="submit" label="Anmelden" icon="pi pi-sign-in" class="p-mt-4" />
+          <Button type="submit" label="Anmelden" icon="pi pi-sign-in" class="w-full mt-4" />
         </form>
 
-        <p class="p-text-center p-mt-3">
-          Noch kein Konto? <router-link to="/register">Hier registrieren</router-link>
+        <p class="mt-4 text-center text-sm">
+          Noch kein Konto?
+          <router-link to="/register" class="text-blue-600 hover:text-blue-800 font-medium"
+            >Jetzt registrieren</router-link
+          >
         </p>
       </template>
     </Card>
   </div>
 </template>
+
+<style>
+.login-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-card {
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.register {
+  margin-top: 15px;
+  text-align: center;
+}
+</style>

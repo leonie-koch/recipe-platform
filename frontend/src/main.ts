@@ -7,9 +7,10 @@ import router from './router'
 import PrimeVue from 'primevue/config'
 import ConfirmationService from 'primevue/confirmationservice'
 import ToastService from 'primevue/toastservice'
+
+import '@/assets/main.css'
 import 'primevue/resources/themes/md-light-indigo/theme.css'
 import 'primeicons/primeicons.css'
-import 'primeflex/primeflex.css'
 
 const app = createApp(App)
 
