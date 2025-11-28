@@ -1,0 +1,107 @@
+# ----------------------------------------------------
+# 1. Backend Deployment (Spring Boot)
+# ----------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: recipe-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recipe-backend
+  template:
+    metadata:
+      labels:
+        app: recipe-backend
+    spec:
+      containers:
+        - name: backend-app
+          image: recipe-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_URL
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_PASSWORD
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-credentials
+                  key: JWT_SECRET_KEY
+            - name: JWT_EXPIRATION
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-credentials
+                  key: JWT_EXPIRATION
+
+---
+# 1. Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: recipe-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+# ----------------------------------------------------
+# 2. Frontend Deployment & Service
+# ----------------------------------------------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: recipe-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recipe-frontend
+  template:
+    metadata:
+      labels:
+        app: recipe-frontend
+    spec:
+      containers:
+        - name: frontend-app
+          image: recipe-frontend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+---
+# 2. Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: recipe-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort

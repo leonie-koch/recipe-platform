@@ -15,8 +15,8 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    expose:
-      - "5432"
+    ports:
+      - "5432:5432"
 
   # --------------------
   # 2. Spring Boot Backend
@@ -35,6 +35,10 @@ services:
       jwt.expiration: ${JWT_EXPIRATION}
     depends_on:
       - db
+    networks:
+      default:
+        aliases:
+          - backend-service
 
   # --------------------
   # 3. Vue.js Frontend (Nginx)
