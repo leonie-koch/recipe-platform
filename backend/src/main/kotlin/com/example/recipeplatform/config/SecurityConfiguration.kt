@@ -1,8 +1,8 @@
-package com.example.recipe_platform.config
+package com.example.recipeplatform.config
 
-import com.example.recipe_platform.repository.UserRepository
-import com.example.recipe_platform.security.JwtAuthenticationFilter
-import com.example.recipe_platform.security.JwtService
+import com.example.recipeplatform.repository.UserRepository
+import com.example.recipeplatform.security.JwtAuthenticationFilter
+import com.example.recipeplatform.security.JwtService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager

@@ -1,4 +1,4 @@
-package com.example.recipe_platform.model
+package com.example.recipeplatform.model
 
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority

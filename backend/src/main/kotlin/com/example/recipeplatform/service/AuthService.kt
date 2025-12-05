@@ -1,11 +1,11 @@
-package com.example.recipe_platform.service
+package com.example.recipeplatform.service
 
-import com.example.recipe_platform.dto.AuthResponse
-import com.example.recipe_platform.dto.LoginRequest
-import com.example.recipe_platform.dto.RegisterRequest
-import com.example.recipe_platform.model.User
-import com.example.recipe_platform.repository.UserRepository
-import com.example.recipe_platform.security.JwtService
+import com.example.recipeplatform.dto.AuthResponseDto
+import com.example.recipeplatform.dto.LoginRequestDto
+import com.example.recipeplatform.dto.RegisterRequestDto
+import com.example.recipeplatform.model.User
+import com.example.recipeplatform.repository.UserRepository
+import com.example.recipeplatform.security.JwtService
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -18,7 +18,7 @@ class AuthService(
     private val jwtService: JwtService,
     private val authenticationManager: AuthenticationManager
 ) {
-    fun register(request: RegisterRequest): AuthResponse {
+    fun register(request: RegisterRequestDto): AuthResponseDto {
         if (userRepository.findByUserName(request.username) != null) {
             throw IllegalArgumentException("Username already taken")
         }
@@ -31,10 +31,10 @@ class AuthService(
         val savedUser = userRepository.save(user)
 
         val jwtToken = jwtService.generateToken(savedUser)
-        return AuthResponse(token = jwtToken)
+        return AuthResponseDto(token = jwtToken)
     }
 
-    fun login(request: LoginRequest): AuthResponse {
+    fun login(request: LoginRequestDto): AuthResponseDto {
         // 1. Authentifizierung mit Username/Passwort
         authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(request.username, request.password)
@@ -44,6 +44,6 @@ class AuthService(
             ?: throw RuntimeException("User not found after successful auth")
 
         val jwtToken = jwtService.generateToken(user)
-        return AuthResponse(token = jwtToken)
+        return AuthResponseDto(token = jwtToken)
     }
 }

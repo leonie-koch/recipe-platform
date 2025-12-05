@@ -1,6 +1,6 @@
-package com.example.recipe_platform.repository
+package com.example.recipeplatform.repository
 
-import com.example.recipe_platform.model.Recipe
+import com.example.recipeplatform.model.Recipe
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface RecipeRepository : JpaRepository<Recipe, Long> {}

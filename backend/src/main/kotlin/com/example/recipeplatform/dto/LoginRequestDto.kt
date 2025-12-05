@@ -1,9 +1,9 @@
-package com.example.recipe_platform.dto
+package com.example.recipeplatform.dto
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 
-data class LoginRequest(
+data class LoginRequestDto(
     @field:NotNull(message = "Username ist erforderlich")
     @field:NotBlank(message = "Username darf nicht leer sein")
     val username: String,

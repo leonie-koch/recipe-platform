@@ -1,4 +1,4 @@
-package com.example.recipe_platform.config
+package com.example.recipeplatform.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

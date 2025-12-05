@@ -1,4 +1,4 @@
-package com.example.recipe_platform
+package com.example.recipeplatform
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

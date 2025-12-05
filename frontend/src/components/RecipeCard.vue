@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import Card from 'primevue/card'
 import Button from 'primevue/button'
-import type { Recipe } from '@/types/Recipe'
+import type { RecipeResponseDto } from '@/types/Recipe'
 
 defineProps<{
-  recipe: Recipe
+  recipe: RecipeResponseDto
 }>()
 
 const emit = defineEmits<(e: 'show-detail') => void>()

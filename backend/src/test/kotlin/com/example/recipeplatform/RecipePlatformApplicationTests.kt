@@ -1,4 +1,4 @@
-package com.example.recipe_platform
+package com.example.recipeplatform
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

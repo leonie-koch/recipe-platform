@@ -1,9 +1,9 @@
-package com.example.recipe_platform.controller
+package com.example.recipeplatform.controller
 
-import com.example.recipe_platform.dto.AuthResponse
-import com.example.recipe_platform.dto.LoginRequest
-import com.example.recipe_platform.dto.RegisterRequest
-import com.example.recipe_platform.service.AuthService
+import com.example.recipeplatform.dto.AuthResponseDto
+import com.example.recipeplatform.dto.LoginRequestDto
+import com.example.recipeplatform.dto.RegisterRequestDto
+import com.example.recipeplatform.service.AuthService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import jakarta.validation.Valid
@@ -14,12 +14,12 @@ class AuthController(private val authService: AuthService) {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    fun register(@RequestBody @Valid request: RegisterRequest): AuthResponse {
+    fun register(@RequestBody @Valid request: RegisterRequestDto): AuthResponseDto {
         return authService.register(request)
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody @Valid request: LoginRequest): AuthResponse {
+    fun login(@RequestBody @Valid request: LoginRequestDto): AuthResponseDto {
         return authService.login(request)
     }
 }

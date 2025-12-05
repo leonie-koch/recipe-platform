@@ -1,4 +1,4 @@
-package com.example.recipe_platform.security
+package com.example.recipeplatform.security
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys

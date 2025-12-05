@@ -4,7 +4,7 @@ import { getRecipes, deleteRecipe } from '@/client/recipe-client'
 import RecipeCard from '@/components/RecipeCard.vue'
 import RecipeDetail from '@/components/RecipeDetail.vue'
 import Dialog from 'primevue/dialog'
-import type { Recipe } from '@/types/Recipe'
+import type { RecipeResponseDto } from '@/types/Recipe'
 
 import ConfirmDialog from 'primevue/confirmdialog'
 import { useConfirm } from 'primevue/useconfirm'
@@ -18,7 +18,7 @@ import { RouterLink } from 'vue-router'
 const confirm = useConfirm()
 const toast = useToast()
 
-const recipes = ref<Recipe[]>([])
+const recipes = ref<RecipeResponseDto[]>([])
 const isLoading = ref(true)
 const error = ref<string | null>(null)
 
@@ -26,7 +26,7 @@ const isDetailVisible = ref(false)
 const selectedRecipeId = ref<number | null>(null)
 const selectedRecipeTitle = ref<string>('Rezept-Details')
 
-const openRecipeDetail = (recipe: Recipe) => {
+const openRecipeDetail = (recipe: RecipeResponseDto) => {
   selectedRecipeId.value = recipe.id
   selectedRecipeTitle.value = recipe.title
   isDetailVisible.value = true

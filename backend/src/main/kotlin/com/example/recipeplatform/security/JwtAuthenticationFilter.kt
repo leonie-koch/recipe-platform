@@ -1,4 +1,4 @@
-package com.example.recipe_platform.security
+package com.example.recipeplatform.security
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

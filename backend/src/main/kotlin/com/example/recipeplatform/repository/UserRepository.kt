@@ -1,6 +1,6 @@
-package com.example.recipe_platform.repository
+package com.example.recipeplatform.repository
 
-import com.example.recipe_platform.model.User
+import com.example.recipeplatform.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserRepository : JpaRepository<User, Long> {

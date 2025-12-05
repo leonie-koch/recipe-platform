@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter, RouterView } from 'vue-router'
 import Menubar from 'primevue/menubar'
 import Button from 'primevue/button'
-import { useAuthStore } from '@/stores/auth' // Pinia Store importieren
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
